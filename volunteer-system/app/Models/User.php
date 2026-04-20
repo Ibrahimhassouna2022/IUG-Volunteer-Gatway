@@ -80,4 +80,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(VolunteerHour::class);
     }
+
+    /**
+     * الفرق التي يشرف عليها المستخدم.
+     */
+    public function managedTeams()
+    {
+        return $this->hasMany(Team::class, 'supervisor_id');
+    }
+
+    /**
+     * الفرق التي ينتمي إليها المستخدم كمتطوع.
+     */
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_user');
+    }
 }
