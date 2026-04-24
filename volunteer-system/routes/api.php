@@ -8,6 +8,11 @@ use App\Http\Controllers\Supervisor\SupervisorReportController;
 use App\Http\Controllers\Supervisor\TaskAssignmentController;
 use App\Http\Controllers\Supervisor\TeamController;
 
+use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminSupervisorController;
+use App\Http\Controllers\Admin\AdminSystemSettingsController;
+use App\Http\Controllers\Admin\AdminReportController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -38,4 +43,23 @@ Route::middleware(['auth:sanctum', 'role:supervisor'])->prefix('supervisor')->gr
     // التقارير والإحصائيات
     Route::get('reports/team-stats', [SupervisorReportController::class, 'teamStats']);
     Route::get('reports/teams/{team}/efficiency', [SupervisorReportController::class, 'taskEfficiency']);
+});
+
+// مسارات مدير النظام (Admin Routes)
+Route::middleware(['auth:sanctum', 'role:admin'])->prefix('admin')->group(function () {
+    
+    // إدارة المستخدمين والمشرفين
+    Route::apiResource('users', AdminUserController::class);
+    Route::apiResource('supervisors', AdminSupervisorController::class);
+    
+    // إدارة إعدادات النظام
+    Route::get('settings', [AdminSystemSettingsController::class, 'index']);
+    Route::get('settings/{key}', [AdminSystemSettingsController::class, 'show']);
+    Route::put('settings/bulk', [AdminSystemSettingsController::class, 'updateBulk']);
+    Route::put('settings/{systemSetting}', [AdminSystemSettingsController::class, 'update']);
+    
+    // التقارير والإحصائيات الكلية
+    Route::get('reports/dashboard', [AdminReportController::class, 'dashboardStats']);
+    Route::get('reports/teams-performance', [AdminReportController::class, 'teamPerformanceReport']);
+    Route::get('reports/monthly-hours', [AdminReportController::class, 'monthlyHoursChart']);
 });

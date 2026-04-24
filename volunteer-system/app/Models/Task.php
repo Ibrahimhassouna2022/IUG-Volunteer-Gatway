@@ -19,6 +19,7 @@ class Task extends Model
         'end_date',
         'estimated_hours',
         'actual_hours',
+        'volunteer_notes',
     ];
 
     protected $casts = [
